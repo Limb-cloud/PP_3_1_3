@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Панель администратора</title>
+
+  <style>
+    TABLE {
+      border-collapse: collapse; /* Убираем двойные линии между ячейками */
+      width: 900px; /* Ширина таблицы */
+    }
+    TH {
+      background: #fc0; /* Цвет фона ячейки */
+      text-align: left; /* Выравнивание по левому краю */
+    }
+    TD {
+      background: #fff; /* Цвет фона ячеек */
+      text-align: center; /* Выравнивание по центру */
+    }
+    TH, TD {
+      border: 1px solid black; /* Параметры рамки */
+      padding: 4px; /* Поля вокруг текста */
+    }
+
+    .adduser_button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 8px 2px;
+      cursor: pointer;
+    }
+
+    .update_button {
+      background-color: #b6bd58;
+      border: none;
+      color: white;
+      padding: 7px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 8px 2px;
+      cursor: pointer;
+    }
+
+    .remove_button {
+      background-color: #d00c0c;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 1px;
+      cursor: pointer;
+    }
+
+    .logout_button_form {
+      float: right;
+      display: inline-block;
+    }
+
+    .logout_button {
+      background-color: #062ecb;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 8px 2px;
+      cursor: pointer;
+    }
+
+    .user_button {
+      background-color: #9d3cc9;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 8px 2px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+  <body>
+    <a href="/user" class="user_button">Информация о вашем профиле</a>
+    <form name="logoutForm" class="logout_button_form" th:action="@{/logout}" method="post">
+      <input class="logout_button" type="submit" value="Выйти"/>
+    </form>
+    <br>
+    <a href="/admin/user" class="adduser_button">Добавить пользователя</a>
+
+    <table>
+      <caption><h2>Список пользователей</h2></caption>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Почта</th>
+        <th>Возраст</th>
+        <th>Логин</th>
+        <th>Состояние</th>
+        <th>Роли</th>
+        <th>Изменить пользователя</th>
+        <th>Удалить пользователя</th>
+      </tr>
+      <tr th:each="user : ${users}">
+        <td th:utext="${user.getId()}">Id</td>
+        <td th:utext="${user.getFirstName()}">Имя</td>
+        <td th:utext="${user.getLastName()}">Фамилия</td>
+        <td th:utext="${user.getEmail()}">Почта</td>
+        <td th:utext="${user.getAge()}">Возраст</td>
+        <td th:utext="${user.getUsername()}">Логин</td>
+        <td th:utext="${user.isEnabled()}">Состояние</td>
+        <td>
+          <div th:each="role : ${user.getRoles()}">
+            <span th:text="${role.getName()}"></span>
+          </div>
+        </td>
+        <td>
+          <form th:method="GET" th:action="@{/admin/user/{id}(id=${user.getId()})}" th:object="${user}">
+            <input class="update_button" type="submit" value="Изменить">
+          </form>
+        </td>
+
+        <td>
+          <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}" >
+            <input class="remove_button" type="submit" value="Удалить">
+          </form>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

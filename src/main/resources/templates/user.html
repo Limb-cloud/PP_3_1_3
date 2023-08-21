@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Информация о вашем профиле</title>
+  <style>
+    TABLE {
+      border-collapse: collapse; /* Убираем двойные линии между ячейками */
+      width: 450px; /* Ширина таблицы */
+    }
+
+    .theader {
+      background: #9d3cc9; /* Цвет фона ячейки */
+      text-align: left; /* Выравнивание по левому краю */
+    }
+
+    TD {
+      background: #fff; /* Цвет фона ячеек */
+      text-align: center; /* Выравнивание по центру */
+    }
+
+    TH, TD {
+      border: 1px solid black; /* Параметры рамки */
+      padding: 4px; /* Поля вокруг текста */
+    }
+  </style>
+</head>
+  <body>
+    <table>
+      <caption><h2>Информация о вашем профиле</h2></caption>
+      <tr>
+        <td class="theader">ID</td>
+        <td th:text="${user.getId()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Имя</td>
+        <td th:text="${user.getFirstName()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Фамилия</td>
+        <td th:text="${user.getLastName()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Почта</td>
+        <td th:text="${user.getEmail()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Возраст</td>
+        <td th:text="${user.getAge()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Логин</td>
+        <td th:text="${user.getUsername()}"></td>
+      </tr>
+      <tr>
+        <td class="theader">Роли</td>
+        <td>
+          <div th:each="role : ${user.getRoles()}">
+            <span th:text="${role.getName()}"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
