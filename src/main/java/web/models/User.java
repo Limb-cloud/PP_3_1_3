@@ -4,15 +4,22 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -45,42 +52,40 @@ public class User implements UserDetails {
   @NotNull(message = "Поле Возраст не может быть пустым")
   private Integer age;
 
-  @Column(name = "username", unique = true)
+  @Column(name = "username", unique = true, nullable = false)
   @Length(min = 5, max = 14, message = "Минимальная длина логина может быть 7, а максимальная 14")
   @Pattern(message = "Логин может содержать только английские нижнего регистра, а так же числа",
       regexp = "^[a-z0-9]+$")
-  @NotNull(message = "Логин должен быть указан")
+  @NotNull(message = "Логин не должен быть пустым")
   private String username;
 
-  @Column(name = "password")
-  /*@Length(min = 7, max = 14, message = "Минимальная длина пароля может быть 7, а максимальная 14")
-  @Pattern(message = "Пароль должен содержать только английские буквы нижнего и верхнего регистра, а так же числа и специальные символы",
-      regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])$")*/
-  @NotNull(message = "Пароль должен быть заполнен")
+  @Column(name = "password", nullable = false)
+  @NotNull(message = "Пароль не должен быть пустым")
   private String password;
 
-  @Column(name = "enabled")
-  private Boolean enabled;
+  @Column(name = "enabled", nullable = false)
+  private Boolean enabled = true;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false)
   )
   @NotNull(message = "Роль должна быть указана")
   private Set<Role> roles = new HashSet<>();
 
-  public User() {}
+  public User() {
+  }
 
   public User(String firstName, String lastName, String email, Integer age, String userName,
-      String password, Boolean enabled, Set<Role> roles) {
+      String password, Set<Role> roles) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.age = age;
     this.username = userName;
     this.password = password;
-    this.enabled = enabled;
+    this.enabled = true;
     this.roles = roles;
   }
 
@@ -124,7 +129,7 @@ public class User implements UserDetails {
     this.age = age;
   }
 
-  public void setUserName(String userName) {
+  public void setUsername(String userName) {
     this.username = userName;
   }
 
@@ -159,7 +164,7 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles;
+    return this.getRoles();
   }
 
   @Override

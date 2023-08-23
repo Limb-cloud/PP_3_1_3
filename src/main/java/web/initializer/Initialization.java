@@ -43,7 +43,6 @@ public class Initialization implements ApplicationListener<ContextRefreshedEvent
         18,
         "admin",
         "admin",
-        true,
         roles
     );
 

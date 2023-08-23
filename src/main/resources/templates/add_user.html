@@ -10,7 +10,8 @@
       transition: .3s background-color;
       margin: 5px;
       border-radius:5px;
-      height: 20px;
+      height: auto;
+      min-height: 20px;
     }
 
     form {
@@ -32,11 +33,32 @@
     .errors {
       color: #d00c0c;
     }
+
+    .logout_button_form {
+      float: right;
+      display: inline-block;
+    }
+
+    .logout_button {
+      background-color: #062ecb;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 8px 2px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+<form name="logoutForm" class="logout_button_form" th:action="@{/logout}" method="post">
+  <input class="logout_button" type="submit" value="Выйти"/>
+</form>
 
-<form th:method="POST" th:action="@{/}" th:object="${user}">
+<form th:method="POST" th:action="@{/admin/user}" th:object="${user}">
 
   <label for="firstName">Имя:</label>
   <input class="field" type="text" th:field="*{firstName}" id="firstName">
@@ -51,7 +73,7 @@
   <br/>
 
   <label for="email">E-mail:</label>
-  <input class="field" type="text" th:field="*{email}" id="email">
+  <input class="field" type="email" th:field="*{email}" id="email">
   <br>
   <span class="errors" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
   <br/>
@@ -61,6 +83,25 @@
   <br>
   <span class="errors" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
   <br/>
+
+  <label for="username">Логин:</label>
+  <input class="field" type="text" th:field="*{username}" id="username">
+  <br>
+  <span class="errors" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+  <br/>
+
+  <label for="password">Пароль:</label>
+  <input class="field" type="password" th:field="*{password}" id="password">
+  <br>
+  <span class="errors" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+  <br/>
+
+  <label>Роли:
+    <select class="field" multiple th:field="*{roles}" id="roles">
+      <option th:each="role : ${roleList}" th:value="${role.getId()}" th:text="${role.getName()}"></option>
+    </select>
+  </label>
+  <span class="errors" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
 
   <input class="button" type="submit" value="Создать пользователя"/>
 </form>

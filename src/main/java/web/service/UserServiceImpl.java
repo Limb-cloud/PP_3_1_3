@@ -11,7 +11,7 @@ import web.models.User;
 import web.repository.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
   private final UserRepository repository;
   private final PasswordEncoder encoder;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
   @Override
   @Transactional
   public void updateUser(User user) {
-
+    repository.save(user);
   }
 
   @Override
@@ -57,10 +57,15 @@ public class UserServiceImpl implements UserService{
   }
 
   @Override
+  public boolean isUniqueUsername(String userName) {
+    return getUserByUsername(userName) != null;
+  }
+
+  @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = getUserByUsername(username);
 
-    if(user == null) {
+    if (user == null) {
       throw new UsernameNotFoundException("Пользователь не найден");
     }
 

@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import web.models.User;
+import web.service.RoleService;
 import web.service.UserService;
 
 @Controller
@@ -22,12 +24,14 @@ import web.service.UserService;
 public class AdminController {
 
   private final UserService userService;
+  private final RoleService roleService;
 
   private static final String REDIRECT_MAIN_PAGE = "redirect:/admin";
 
   @Autowired
-  public AdminController(UserService userService) {
+  public AdminController(UserService userService, RoleService roleService) {
     this.userService = userService;
+    this.roleService = roleService;
   }
 
   @GetMapping
@@ -38,19 +42,28 @@ public class AdminController {
 
   @GetMapping(value = "/user")
   public String printAddUser(Model model) {
+    model.addAttribute("roleList", roleService.listRoles());
     model.addAttribute("user", new User());
     return "add_user";
   }
 
   @GetMapping(value = "/user/{id}")
   public String printUpdateUser(Model model, @PathVariable("id") long id) {
+    model.addAttribute("roleList", roleService.listRoles());
     model.addAttribute("user", userService.getUserById(id));
     return "update_user";
   }
 
   @PostMapping("/user")
-  public String addUser( @ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-    if(bindingResult.hasErrors()) {
+  public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+      Model model) {
+
+    if (userService.isUniqueUsername(user.getUsername())) {
+      bindingResult.addError(new FieldError("user", "username", "Данный логин уже используется"));
+    }
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("roleList", roleService.listRoles());
       return "add_user";
     }
 
@@ -59,8 +72,14 @@ public class AdminController {
   }
 
   @PutMapping(value = "/user/{id}")
-  public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-    if(bindingResult.hasErrors()) {
+  public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+      Model model) {
+    if (userService.isUniqueUsername(user.getUsername())) {
+      bindingResult.addError(new FieldError("user", "username", "Данный логин уже используется"));
+    }
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("roleList", roleService.listRoles());
       return "update_user";
     }
 

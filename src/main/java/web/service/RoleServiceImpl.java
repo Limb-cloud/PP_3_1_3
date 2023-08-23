@@ -1,12 +1,10 @@
 package web.service;
 
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.models.Role;
-import web.models.User;
 import web.repository.RoleRepository;
 
 @Service
@@ -32,6 +30,6 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public Role getRoleByName(String name) {
-    return null;
+    return repository.findByName(name);
   }
 }
