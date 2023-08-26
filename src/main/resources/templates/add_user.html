@@ -101,6 +101,8 @@
       <option th:each="role : ${roleList}" th:value="${role.getId()}" th:text="${role.getName()}"></option>
     </select>
   </label>
+  <br>
+  <span class="errors" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
 
   <input class="button" type="submit" value="Создать пользователя"/>
 </form>

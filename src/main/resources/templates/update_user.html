@@ -99,7 +99,8 @@
               th:selected="${user.getRoles().contains(role)}"></option>
     </select>
   </label>
-  <span class="errors" th:if="${#fields.hasErrors('role')}"></span>
+  <br>
+  <span class="errors" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
 
   <input class="button" type="submit" value="Изменить пользователя"/>
 </form>

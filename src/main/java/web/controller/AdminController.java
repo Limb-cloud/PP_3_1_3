@@ -1,6 +1,7 @@
 package web.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,10 @@ public class AdminController {
   @PostMapping("/user")
   public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
       Model model, @RequestParam(required = false) String role) {
+    if (role == null) {
+      bindingResult.addError(new FieldError("user", "roles", "Роль должна быть выбрана"));
+    }
+
     if (userService.isUniqueUsername(user.getUsername())) {
       bindingResult.addError(new FieldError("user", "username", "Данный логин уже используется"));
     }
@@ -73,7 +78,7 @@ public class AdminController {
 
   @PutMapping(value = "/user/{id}")
   public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-      Model model, @RequestParam(required = false) String role) {
+      Model model, @RequestParam @NotNull(message = "Роль должна быть выбрана") String role) {
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("roleList", roleService.listRoles());
