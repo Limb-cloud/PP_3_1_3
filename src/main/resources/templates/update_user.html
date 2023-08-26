@@ -94,12 +94,12 @@
   </label>
 
   <label>Роли:
-    <select class="field" multiple name="roles" id="roles">
+    <select class="field" multiple name="role" id="role">
       <option th:each="role : ${roleList}" th:value="${role.getId()}" th:text="${role.getName()}"
               th:selected="${user.getRoles().contains(role)}"></option>
     </select>
   </label>
-  <span class="errors" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
+  <span class="errors" th:if="${#fields.hasErrors('role')}"></span>
 
   <input class="button" type="submit" value="Изменить пользователя"/>
 </form>

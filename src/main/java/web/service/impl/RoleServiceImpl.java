@@ -1,11 +1,13 @@
-package web.service;
+package web.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import web.models.Role;
 import web.repository.RoleRepository;
+import web.service.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -23,13 +25,18 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  @Transactional
-  public void addRole(Role role) {
-    repository.save(role);
+  public Role getById(Long id) {
+    return repository.findById(id);
   }
 
   @Override
-  public Role getRoleByName(String name) {
-    return repository.findByName(name);
+  public Set<Role> storeSetRolesByIds(String rolesId) {
+    Set<Role> roles = new HashSet<>();
+
+    for(String string : rolesId.split(",")) {
+      roles.add(getById(Long.parseLong(string)));
+    }
+
+    return roles;
   }
 }

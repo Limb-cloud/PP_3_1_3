@@ -1,12 +1,14 @@
 package web.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import java.util.List;
 import web.models.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository {
 
-  @Query(value = "Select u from User u left join fetch u.roles where u.username=:userName")
-  User findByUserName(@Param("userName") String userName);
+  List<User> findAll();
+  void save(User user);
+  void update(User user);
+  void deleteById(Long id);
+  User getById(Long id);
+  User findByUserName(String userName);
 }

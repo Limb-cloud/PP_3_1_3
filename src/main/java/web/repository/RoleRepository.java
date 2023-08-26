@@ -1,9 +1,10 @@
 package web.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 import web.models.Role;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository {
 
-  Role findByName(String name);
+  List<Role> findAll();
+  Role findById(Long id);
 }

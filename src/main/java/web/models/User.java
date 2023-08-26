@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +20,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,12 +69,12 @@ public class User implements UserDetails {
   @Column(name = "enabled", nullable = false)
   private Boolean enabled = true;
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
   @JoinTable(name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false)
+      inverseJoinColumns = @JoinColumn(name = "role_id")
   )
-  @NotNull(message = "Роль должна быть указана")
+  @Fetch(FetchMode.JOIN)
   private Set<Role> roles = new HashSet<>();
 
   public User() {
@@ -196,4 +199,5 @@ public class User implements UserDetails {
   public boolean isEnabled() {
     return enabled;
   }
+
 }

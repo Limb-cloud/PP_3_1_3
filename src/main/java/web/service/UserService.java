@@ -8,9 +8,9 @@ public interface UserService extends UserDetailsService {
 
   List<User> listUsers();
 
-  void addUser(User user);
+  void addUser(User user, String role);
 
-  void updateUser(User user);
+  void updateUser(User user, String role);
 
   void removeUser(Long id);
 

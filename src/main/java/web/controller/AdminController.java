@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import web.models.User;
 import web.service.RoleService;
 import web.service.UserService;
@@ -56,8 +57,7 @@ public class AdminController {
 
   @PostMapping("/user")
   public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-      Model model) {
-
+      Model model, @RequestParam(required = false) String role) {
     if (userService.isUniqueUsername(user.getUsername())) {
       bindingResult.addError(new FieldError("user", "username", "Данный логин уже используется"));
     }
@@ -67,23 +67,20 @@ public class AdminController {
       return "add_user";
     }
 
-    userService.addUser(user);
+    userService.addUser(user, role);
     return REDIRECT_MAIN_PAGE;
   }
 
   @PutMapping(value = "/user/{id}")
   public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-      Model model) {
-    if (userService.isUniqueUsername(user.getUsername())) {
-      bindingResult.addError(new FieldError("user", "username", "Данный логин уже используется"));
-    }
+      Model model, @RequestParam(required = false) String role) {
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("roleList", roleService.listRoles());
       return "update_user";
     }
 
-    userService.updateUser(user);
+    userService.updateUser(user, role);
     return REDIRECT_MAIN_PAGE;
   }
 

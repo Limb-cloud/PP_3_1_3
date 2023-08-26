@@ -97,11 +97,10 @@
   <br/>
 
   <label>Роли:
-    <select class="field" multiple th:field="*{roles}" id="roles">
+    <select class="field" multiple name="role" id="role">
       <option th:each="role : ${roleList}" th:value="${role.getId()}" th:text="${role.getName()}"></option>
     </select>
   </label>
-  <span class="errors" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></span>
 
   <input class="button" type="submit" value="Создать пользователя"/>
 </form>
