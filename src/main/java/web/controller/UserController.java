@@ -22,7 +22,7 @@ public class UserController {
   }
 
   @GetMapping
-  public String printUpdateUser(Model model, Principal principal) {
+  public String printUser(Model model, Principal principal) {
     model.addAttribute("user",
         userService.getUserByUsername(principal.getName()));
     return "user";
